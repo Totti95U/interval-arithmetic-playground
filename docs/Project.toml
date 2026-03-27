@@ -6,4 +6,5 @@ IntervalArithmeticPlayground = "ca004135-0bd2-4b11-b24a-30e39d8d19a7"
 LiveServer = "16fef848-5104-11e9-1b77-fb7a48bbb589"
 
 [compat]
+Documenter = "1.17.0"
 LiveServer = "1.5.0"
