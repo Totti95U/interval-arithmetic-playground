@@ -25,12 +25,13 @@ function plot_roots(f, roots)
 end
 
 # Target function
-f(x) = x^3 - 2x^2 + x - 0.05
+# f(x) = x^3 - 2x^2 + x - 0.05
+f(x) = (x - 1) * (x - 2) * (x - 3)
 
 # Initial domain
-dom = interval(Float64, -10, 10)
+dom = interval(Float64, 0, 3.5)
 
 # Find the root
-roots = rootfinding_with_bisection(f, dom, maxiter=10)
+roots = rootfinding_with_bisection(f, dom, maxiter=6)
 
 fig = plot_roots(f, roots)

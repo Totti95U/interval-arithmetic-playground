@@ -15,6 +15,7 @@ makedocs(;
     ),
     pages=[
         "Home" => "index.md",
+        "API" => "api.md",
     ],
 )
 
@@ -25,9 +26,3 @@ DocumenterVitepress.deploydocs(;
     devbranch="main",
     push_preview=true,
 )
-
-"""
-using LiveServer
-
-LiveServer.serve(joinpath(@__DIR__, "build"), port=8000)
-""";
