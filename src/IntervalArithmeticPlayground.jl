@@ -13,7 +13,7 @@ The function returns a list of intervals that may contain the roots.
 # Arguments
 
 - `f`: The function for which to find roots.
-- `dom`: The interval in which to search for roots.
+- `dom`: The interval in which to search for roots. The default is the entire real line.
 - `maxiter`: The maximum number of iterations for refining the intervals.
 
 # Example
@@ -25,7 +25,7 @@ dom = interval(Float64, -10, 10)
 roots = rootfinding_with_bisection(f, dom, maxiter=10)
 ```
 """
-function rootfinding_with_bisection(f, dom; maxiter=16)
+function rootfinding_with_bisection(f, dom = entireinterval(Float64); maxiter=16)
     # Initial interval
     T = numtype(dom)
     bdd_intervals = Interval{T}[]
