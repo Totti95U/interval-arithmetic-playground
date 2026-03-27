@@ -1,11 +1,12 @@
 # 0. build the documentation
-# in bash run following command in `docs` directory
+# In a shell, run the following commands in the `docs` directory:
 # $ cd docs
+# $ julia --project make.jl
 # $ npm run docs:build
 
 # 1. serve the documentation
-# To view the documentation locally, run this script in docs environment:
-# julia --project local-view.jl
+# To view the documentation locally, run this script in the docs environment:
+# $ julia --project local-view.jl
 using LiveServer
 
-LiveServer.serve(dir = "build/1")
+LiveServer.serve(dir = "build/.documenter/.vitepress/dist")
