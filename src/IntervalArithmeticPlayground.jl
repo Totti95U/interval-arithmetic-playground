@@ -5,7 +5,7 @@ using IntervalArithmetic
 export rootfinding_with_bisection
 
 """
-    rootfinding_with_bisection(f, dom; maxiter=16)
+    rootfinding_with_bisection(f, dom=entireinterval(Float64); maxiter=16)
 
 Find the roots of a function ``f\\colon \\mathbb{R} \\to \\mathbb{R}`` in a given interval `dom` using the bisection method. 
 The function returns a list of intervals that may contain the roots.
@@ -25,7 +25,7 @@ dom = interval(Float64, -10, 10)
 roots = rootfinding_with_bisection(f, dom, maxiter=10)
 ```
 """
-function rootfinding_with_bisection(f, dom = entireinterval(Float64); maxiter=16)
+function rootfinding_with_bisection(f, dom::Interval{<:Number} = entireinterval(Float64); maxiter=16)
     # Initial interval
     T = numtype(dom)
     bdd_intervals = Interval{T}[]
