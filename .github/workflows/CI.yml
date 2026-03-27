@@ -66,6 +66,11 @@ jobs:
         run: |
           rm -rf node_modules package-lock.json
           npm install
+      - name: Install docs frontend dependencies (Vitepress/Rollup)
+        working-directory: docs
+        run: |
+          rm -rf node_modules
+          npm ci --include=optional
       - uses: julia-actions/julia-buildpkg@v1
       - uses: julia-actions/julia-docdeploy@v1
         env:
