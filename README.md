@@ -7,7 +7,7 @@
 
 Interval Arithmetic.jl のための自由帳。
 
-詳しくは [ドキュメント](https://Totti95U.github.io/interval-arithmetic-playground/stable/) を参照してください。
+詳しくは [ドキュメント](https://Totti95U.github.io/interval-arithmetic-playground/dev/) を参照してください。
 
 ## Root Finding
 
