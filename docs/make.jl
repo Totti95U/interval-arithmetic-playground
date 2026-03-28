@@ -9,7 +9,7 @@ makedocs(;
     authors="T. Usui",
     sitename="interval-arithmetic-playground",
     format=DocumenterVitepress.MarkdownVitepress(;
-        repo="https://Totti95U.github.io/interval-arithmetic-playground",
+        repo="https://github.com/Totti95U/interval-arithmetic-playground",
         devbranch="main",
         devurl = "dev",
     ),
@@ -20,7 +20,7 @@ makedocs(;
 )
 
 DocumenterVitepress.deploydocs(;
-    repo="github.com/Totti95U/interval-arithmetic-playground",
+    repo="github.com/Totti95U/interval-arithmetic-playground.git",
     target=joinpath(@__DIR__, "build"),
     branch = "gh-pages",
     devbranch="main",
