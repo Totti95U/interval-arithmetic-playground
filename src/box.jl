@@ -62,6 +62,13 @@ Base.eltype(::Type{Box{N, T}}) where {N, T} = Interval{T}
 
 Base.iterate(b::Box, state::Int = 1) = state > length(b) ? nothing : (b[state], state + 1)
 
+×(b::Box{N,T}, x::Interval{T}) where {N, T <: AbstractFloat} = box((b.intervals..., x))
+×(x::Interval{T}, b::Box{N,T}) where {N, T <: AbstractFloat} = box((x, b.intervals...))
+×(b1::Box{N, T}, b2::Box{M, T}) where {N, M, T <: AbstractFloat} = box((b1.intervals..., b2.intervals...))
+
+unitbox(::Type{T}, N::Int) where {T <: AbstractFloat} = box(ntuple(i -> interval(zero(T), one(T)), Val(N)))
+unitbox(N::Int) = unitbox(DEFAULT_FLOATTYPE, N)
+
 """
     in_box(x::SVNT{N, T}, b::Box{N, T})
 
@@ -97,13 +104,15 @@ function issubset_box(b1::Box{N}, b2::Box{N}) where {N}
     all(i -> issubset_interval(b1[i], b2[i]), 1:N)
 end
 
-volume(b::Box) = prod(2 .* radius.(b.intervals))
+volume(b::Box) = prod(interval(2) .* interval.(radius.(b.intervals)))
 
 """
-        bisect(b::Box{N, T}, i::Int, α=0.5)
-        bisect(b::Box{N, T}, α=0.5)
+        bisect(b::Box, i::Int, α=0.5)
+        bisect(bs::BoxSet, i::Int, α=0.5)
 
 Split the box `b` at relative position `α` along the `i`-th dimension, where `α=0.5` corresponds to the midpoint.
+
+If you want to split the box along all dimensions, use [`mince`](@ref) instead.
 """
 function IntervalArithmetic.bisect(b::Box, i::Int, α::Real = 0.5)
     0 <= α <= 1 || throw(DomainError(α, "bisect only accepts a relative position between 0 and 1"))
@@ -115,21 +124,37 @@ function IntervalArithmetic.bisect(b::Box, i::Int, α::Real = 0.5)
 end
 
 """
-    dice(b::Box, α=0.5)
+    mince(b::Box, i::Int, n::Int)
+    mince(b::Box, n::Int)
+    mince(bs::BoxSet, i::Int, n::Int)
+    mince(bs::BoxSet, n::Int)
 
-Split the box `b` into 2^N sub-boxes by bisecting each dimension at relative position `α`.
+Split the box `b` into `n` equal slices along the `i`-th dimension.
+
+Split the box `b` into `n` equal slices along all dimensions.
 """
-function dice(b::Box{N,T}, α::Real = 0.5) where {N, T}
-    bs = Vector{Box{N,T}}(undef, 2^N)
+function IntervalArithmetic.mince(b::Box{N}, i::Int, n::Int) where {N}
+    1 <= i <= N || throw(DomainError(i, "axes must be between 1 and dimension of the box"))
+    1 <= n || throw(DomainError(n, "the number of slices must be positive"))
 
+    xs = mince(b[i], n)
+    return boxset(map(x -> box(b[1:i-1]..., x, b[i+1:end]...), xs))
+end
+
+function IntervalArithmetic.mince(b::Box{N,T}, n::Int) where {N,T}
+    1 <= n || throw(DomainError(n, "the number of slices must be positive"))
+
+    bs = BoxSet{N,T}(undef, n^N)
+    bs[1] = b
     for i in 1:N
-        for j in 1:2^(i-1)
-            idx = (j-1)*2^(N-i+1) + 1
-            b1, b2 = bisect(bs[idx], i, α)
-            bs[idx] = b1
-            bs[idx + 2^(N-i)] = b2
+        for j in 1:n^(i-1)
+            idx = (j-1)*n^(N-i+1) + 1
+            minced = mince(bs[idx], i, n)
+            for (k, subbox) in enumerate(minced)
+                bs[idx + (k-1)*n^(N-i)] = subbox
+            end
         end
     end
 
-    return boxset(bs)
+    return bs
 end
